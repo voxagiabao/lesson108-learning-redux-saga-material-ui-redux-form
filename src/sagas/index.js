@@ -54,6 +54,7 @@ function* watchFetchListTaskAction() {
 
 function* filterTaskSaga({ payload }) {
   yield delay(500);
+  console.log('payload: ......................', payload);
   const { keyword } = payload;
   yield put(
     fetchListTask({
@@ -70,7 +71,7 @@ function* addTaskSaga({ payload }) {
     description,
     status: STATUSES[0].value,
   });
-  console.log('resp', resp);
+
   const { data, status } = resp;
   if (status === STATUS_CODE.CREATED) {
     yield put(addTaskSuccess(data));
@@ -82,16 +83,16 @@ function* addTaskSaga({ payload }) {
   yield put(hideLoading());
 }
 
-
 function* updateTaskSaga({ payload }) {
   const { title, description, status } = payload;
-  const taskEditing = yield select(state => state.task.taskEditing);
+  const taskEditing = yield select((state) => state.task.taskEditing);
   yield put(showLoading());
   const resp = yield call(
     updateTask,
     { title, description, status },
     taskEditing.id,
   );
+
   const { data, status: statusCode } = resp;
   if (statusCode === STATUS_CODE.SUCCESS) {
     yield put(updateTaskSuccess(data));

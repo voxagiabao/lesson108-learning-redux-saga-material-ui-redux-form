@@ -1,28 +1,23 @@
-import { withStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
+import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as taskActions from '../../actions/task';
 import * as modalActions from '../../actions/modal';
+import * as taskActions from '../../actions/task';
 import SearchBox from '../../components/SearchBox';
-import TaskForm from '../TaskForm/index';
 import TaskList from '../../components/TaskList/index';
 import { STATUSES } from '../../constants/index';
+import TaskForm from '../TaskForm/index';
 import styles from './styles';
+import { Box } from '@material-ui/core';
 
 class TaskBoard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-    };
-  }
-
   componentDidMount() {
+    // sử dụng hook thay cho componentDidMount
     const { taskActionCreator } = this.props;
     const { fetchListTask } = taskActionCreator;
     fetchListTask();
@@ -36,7 +31,10 @@ class TaskBoard extends Component {
   };
 
   openForm = () => {
-    const { modalActionCreator } = this.props;
+    const { modalActionCreator, taskActionCreator } = this.props;
+    const { setTaskEditing } = taskActionCreator;
+    setTaskEditing(null);
+
     const {
       showModal,
       changeModalContent,
@@ -47,33 +45,89 @@ class TaskBoard extends Component {
     changeModalContent(<TaskForm />);
   };
 
-  handleClose = () => {
-    this.setState({
-      open: false,
-    });
-  };
-
   renderSearchBox() {
     let xhtml = null;
     xhtml = <SearchBox handleChange={this.handleFilter} />;
     return xhtml;
   }
 
+  handleEditTask = (task) => {
+    const { taskActionCreator, modalActionCreator } = this.props;
+    const { setTaskEditing } = taskActionCreator;
+    setTaskEditing(task);
+
+    // mo form
+    const {
+      showModal,
+      changeModalContent,
+      changeModalTitle,
+    } = modalActionCreator;
+    showModal();
+    changeModalTitle('Cập nhật công việc');
+    changeModalContent(<TaskForm />);
+  };
+
+  showModalDeleteTask = (task) => {
+    const { modalActionCreator, classes } = this.props;
+
+    // mo form
+    const {
+      showModal,
+      changeModalContent,
+      changeModalTitle,
+      hideModal,
+    } = modalActionCreator;
+    showModal();
+    changeModalTitle('Xóa công việc');
+    changeModalContent(
+      <div className={classes.modalDelete}>
+        <div className={classes.modalConfirmText}>
+          Bạn chắc chắn muốn xóa{' '}
+          <span className={classes.modalConfirmTextBold}>{task.title}</span>?
+        </div>
+        <Box display="flex" flexDirection="row-reverse" mt={2}>
+          <Box ml={1}>
+            <Button variant="contained" onClick={hideModal}>
+              Hủy Bỏ
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.handleDeleteTask(task)}
+            >
+              Đồng ý
+            </Button>
+          </Box>
+        </Box>
+      </div>,
+    );
+  };
+
+  handleDeleteTask = (task) => {
+    const { id } = task;
+    const { taskActionCreator } = this.props;
+    const { deleteTask } = taskActionCreator;
+    deleteTask(id);
+  };
+
   renderBoard() {
     const { listTask } = this.props;
-    
     let xhtml = null;
     xhtml = (
       <Grid container spacing={2}>
         {STATUSES.map((status) => {
           const taskFiltered = listTask.filter(
-            task => task.status === status.value,
+            (task) => task.status === status.value,
           );
           return (
             <TaskList
               key={status.value}
               tasks={taskFiltered}
               status={status}
+              onClickEdit={this.handleEditTask}
+              onClickDelete={this.showModalDeleteTask}
             />
           );
         })}
@@ -101,14 +155,7 @@ class TaskBoard extends Component {
         >
           <AddIcon /> Thêm mới công việc
         </Button>
-        {/* <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={this.loadData}
-        >
-          Load Data
-        </Button> */}
+
         {this.renderSearchBox()}
         {this.renderBoard()}
       </div>
@@ -121,6 +168,8 @@ TaskBoard.propTypes = {
   taskActionCreator: PropTypes.shape({
     fetchListTask: PropTypes.func,
     filterTask: PropTypes.func,
+    deleteTask: PropTypes.func,
+    //setTaskEditing: PropTypes.func,
   }),
   listTask: PropTypes.array,
   modalActionCreator: PropTypes.shape({

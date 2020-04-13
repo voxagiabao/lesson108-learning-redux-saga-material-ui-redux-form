@@ -8,7 +8,7 @@ import styles from './styles';
 
 class TaskList extends Component {
   render() {
-    const { classes, tasks, status } = this.props;
+    const { classes, tasks, status, onClickEdit, onClickDelete } = this.props;
 
     return (
       <Grid item md={4} xs={12} key={status.value}>
@@ -18,7 +18,15 @@ class TaskList extends Component {
 
         <div className={classes.wrapperListTask}>
           {tasks.map((task, index) => {
-            return <TaskItem key={index} task={task} status={status} />;
+            return (
+              <TaskItem
+                key={index}
+                task={task}
+                status={status}
+                onClickEdit={() => onClickEdit(task)}
+                onClickDelete={() => onClickDelete(task)}
+              />
+            );
           })}
         </div>
       </Grid>
@@ -30,6 +38,7 @@ TaskList.propTypes = {
   classes: PropTypes.object,
   tasks: PropTypes.array,
   status: PropTypes.object,
+  onClickDelete: PropTypes.func,
 };
 
 export default withStyles(styles)(TaskList);

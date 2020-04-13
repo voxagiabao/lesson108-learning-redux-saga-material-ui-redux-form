@@ -1,4 +1,4 @@
-import * as uiTypes from "../constants/ui";
+import * as uiTypes from '../constants/ui';
 
 export const showLoading = () => {
   return {
@@ -9,5 +9,17 @@ export const showLoading = () => {
 export const hideLoading = () => {
   return {
     type: uiTypes.HIDE_LOADING,
+  };
+};
+
+export const showSidebar = () => {
+  return {
+    type: uiTypes.SHOW_SIDEBAR,
+  };
+};
+
+export const hideSidebar = () => {
+  return {
+    type: uiTypes.HIDE_SIDEBAR,
   };
 };

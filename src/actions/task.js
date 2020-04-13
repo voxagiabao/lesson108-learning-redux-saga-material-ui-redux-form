@@ -10,7 +10,7 @@ export const fetchListTask = (params = {}) => {
   };
 };
 
-export const fetchListTaskSuccess = data => {
+export const fetchListTaskSuccess = (data) => {
   return {
     type: taskConstants.FETCH_TASK_SUCCESS,
     payload: {
@@ -19,7 +19,7 @@ export const fetchListTaskSuccess = data => {
   };
 };
 
-export const fetchListTaskFailed = error => {
+export const fetchListTaskFailed = (error) => {
   return {
     type: taskConstants.FETCH_TASK_FAILED,
     payload: {
@@ -28,14 +28,14 @@ export const fetchListTaskFailed = error => {
   };
 };
 
-export const filterTask = keyword => ({
+export const filterTask = (keyword) => ({
   type: taskConstants.FILTER_TASK,
   payload: {
     keyword,
   },
 });
 
-export const filterTaskSuccess = data => ({
+export const filterTaskSuccess = (data) => ({
   type: taskConstants.FILTER_TASK_SUCCESS,
   payload: {
     data,
@@ -52,7 +52,7 @@ export const addTask = (title, description) => {
   };
 };
 
-export const addTaskSuccess = data => {
+export const addTaskSuccess = (data) => {
   return {
     type: taskConstants.ADD_TASK_SUCCESS,
     payload: {
@@ -61,7 +61,7 @@ export const addTaskSuccess = data => {
   };
 };
 
-export const addTaskFailed = error => {
+export const addTaskFailed = (error) => {
   return {
     type: taskConstants.ADD_TASK_FAILED,
     payload: {
@@ -70,7 +70,7 @@ export const addTaskFailed = error => {
   };
 };
 
-export const setTaskEditing = task => {
+export const setTaskEditing = (task) => {
   return {
     type: taskConstants.SET_TASK_EDITING,
     payload: {
@@ -90,7 +90,7 @@ export const updateTask = (title, description, status = STATUSES[0].value) => {
   };
 };
 
-export const updateTaskSuccess = data => {
+export const updateTaskSuccess = (data) => {
   return {
     type: taskConstants.UPDATE_TASK_SUCCESS,
     payload: {
@@ -99,7 +99,7 @@ export const updateTaskSuccess = data => {
   };
 };
 
-export const updateTaskFailed = error => {
+export const updateTaskFailed = (error) => {
   return {
     type: taskConstants.UPDATE_TASK_FAILED,
     payload: {
@@ -108,7 +108,7 @@ export const updateTaskFailed = error => {
   };
 };
 
-export const deleteTask = id => {
+export const deleteTask = (id) => {
   return {
     type: taskConstants.DELETE_TASK,
     payload: {
@@ -117,7 +117,7 @@ export const deleteTask = id => {
   };
 };
 
-export const deleteTaskSuccess = data => {
+export const deleteTaskSuccess = (data) => {
   return {
     type: taskConstants.DELETE_TASK_SUCCESS,
     payload: {
@@ -126,7 +126,7 @@ export const deleteTaskSuccess = data => {
   };
 };
 
-export const deleteTaskFailed = error => {
+export const deleteTaskFailed = (error) => {
   return {
     type: taskConstants.DELETE_TASK_FAILED,
     payload: {
